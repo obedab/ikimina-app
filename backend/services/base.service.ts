@@ -1,34 +1,75 @@
+import { Pool } from "pg";
 export class BaseService<T> {
-  private model: any; 
+  protected tableName: string;
+  protected pool: Pool;
 
-  constructor(model: any) {
-    this.model = model;
+
+  constructor(tableName: string) {
+    this.tableName = tableName;
+
+    this.pool = new Pool({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: Number(process.env.DB_PORT),
+    });
   }
 
   async create(data: Partial<T>): Promise<T> {
-    return await this.model.create(data);
+    const keys = Object.keys(data);
+    const values =Object.values(data);
+
+    const placeholders = keys.map((_, i) => `$${i + 1}`).join(",");
+    
+    const  query = `
+      INSERT INTO ${this.tableName} (${keys.join(", ")})
+      VALUES (${placeholders})
+      RETURNING *;
+    `;
+
+    const result = await this.pool.query(query, values);
+    return result.rows[0];
   }
 
-  // Find one 
-  async findById(id: number): Promise<T | null> {
-    return await this.model.findByPk(id);
+  
+  async findById(id: number){
+   const query = `SELECT * FROM ${this.tableName} WHERE ID =$1`;
+   const result = await this.pool.query(query, [id]);
+
+   return result.rows.length > 0 ? result.rows[0] : null
   }
 
-  // Find all 
   async findAll(): Promise<T[]> {
-    return await this.model.findAll();
+    const query = `SELECT * FROM ${this.tableName} WHERE id = $1`;
+    const result = await this.pool.query(query);
+
+    return result.rows;
   }
 
-  async update(id: number, data: Partial<T>): Promise<T | null> {
-    const record = await this.model.findByPk(id);
-    if (!record) return null;
-    return await record.update(data);
+    
+  async update(id: number, data: Partial<T>): Promise<boolean> {
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+
+    const setClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(", ");
+
+    const query = `
+      UPDATE ${this.tableName}
+      SET ${setClause}
+      WHERE id = $${keys.length + 1}
+    `;
+
+    const result = await this.pool.query(query, [...values, id]);
+    return (result.rowCount ?? 0) > 0;
   }
 
   async delete(id: number): Promise<boolean> {
-    const record = await this.model.findByPk(id);
-    if (!record) return false;
-    await record.destroy();
-    return true;
+    const query =  `DELETE FROM ${ this.tableName} WHERE ID = $1`;
+     const result = await this.pool.query(query, [id]); 
+
+    return (result.rowCount ?? 0)> 0;
   }
 }
