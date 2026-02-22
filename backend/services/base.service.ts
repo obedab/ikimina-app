@@ -1,4 +1,6 @@
 import { Pool } from "pg";
+import { pool } from "../config/db.js";
+
 export class BaseService<T> {
   protected tableName: string;
   protected pool: Pool;
@@ -7,13 +9,7 @@ export class BaseService<T> {
   constructor(tableName: string) {
     this.tableName = tableName;
 
-    this.pool = new Pool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: Number(process.env.DB_PORT),
-    });
+    this.pool = pool
   }
 
   async create(data: Partial<T>): Promise<T> {
@@ -61,8 +57,8 @@ export class BaseService<T> {
       SET ${setClause}
       WHERE id = $${keys.length + 1}
     `;
-
-    const result = await this.pool.query(query, [...values, id]);
+    
+  const result = await this.pool.query(query, [...values, id]);
     return (result.rowCount ?? 0) > 0;
   }
 
