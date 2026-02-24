@@ -1,11 +1,11 @@
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'ikiminadb',
-  password: 'obed2002',
-  port: 5432,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT),
 });
 
 /**
@@ -23,4 +23,7 @@ const connectDB = async (): Promise<void> => {
   }
 };
 
-export { pool, connectDB };
+const runQuery = (query: string, params: any) => pool.query(
+  query, params
+)
+export { pool, connectDB, runQuery };
