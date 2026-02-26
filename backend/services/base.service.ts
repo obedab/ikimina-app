@@ -5,7 +5,6 @@ export class BaseService<T> {
   protected tableName: string;
   protected pool: Pool;
 
-
   constructor(tableName: string) {
     this.tableName = tableName;
     this.pool = pool
@@ -27,7 +26,6 @@ export class BaseService<T> {
     return result.rows[0];
   }
 
-  
   async findById(id: number){
    const query = `SELECT * FROM ${this.tableName} WHERE ID =$1`;
    const result = await this.pool.query(query, [id]);
@@ -42,8 +40,7 @@ export class BaseService<T> {
     return result.rows as T[];
   }
 
-    
-  async update(id: number, data: Partial<T>): Promise<boolean> {
+   async update(id: number, data: Partial<T>): Promise<boolean> {
     const keys = Object.keys(data);
     const values = Object.values(data);
 
