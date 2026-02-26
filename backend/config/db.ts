@@ -23,7 +23,7 @@ const connectDB = async (): Promise<void> => {
   }
 };
 
-const runQuery =  async (query: string, params: string ) => {
-  return await pool.query(query, params)
+const runQuery = async (query: string, params: string) => {
+  return await pool.query(query, params);
 };
 export { pool, connectDB, runQuery };

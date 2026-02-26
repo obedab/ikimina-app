@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('API Irakora neza')
+  res.send('API Irakora neza');
 });
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK' });
@@ -27,4 +27,4 @@ const startServer = async () => {
   });
 };
 
- startServer().catch(err => console.error('pole, Server failed to start', err));;
+startServer().catch((err) => console.error('pole, Server failed to start', err));
