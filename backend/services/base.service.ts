@@ -8,7 +8,6 @@ export class BaseService<T> {
 
   constructor(tableName: string) {
     this.tableName = tableName;
-
     this.pool = pool
   }
 
@@ -37,10 +36,10 @@ export class BaseService<T> {
   }
 
   async findAll(): Promise<T[]> {
-    const query = `SELECT * FROM ${this.tableName} WHERE id = $1`;
+    const query = `SELECT * FROM ${this.tableName}`;
     const result = await this.pool.query(query);
 
-    return result.rows;
+    return result.rows as T[];
   }
 
     
@@ -58,9 +57,9 @@ export class BaseService<T> {
       WHERE id = $${keys.length + 1}
     `;
     
-  const result = await this.pool.query(query, [...values, id]);
-    return (result.rowCount ?? 0) > 0;
-  }
+    const result = await this.pool.query(query, [...values, id]);
+      return (result.rowCount ?? 0) > 0;
+    }
 
   async delete(id: number): Promise<boolean> {
     const query =  `DELETE FROM ${ this.tableName} WHERE ID = $1`;

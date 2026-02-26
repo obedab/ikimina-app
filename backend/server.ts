@@ -1,5 +1,5 @@
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
 import { connectDB } from './config/db.js';
 
@@ -27,4 +27,4 @@ const startServer = async () => {
   });
 };
 
-startServer();
+ startServer().catch(err => console.error('pole, Server failed to start', err));;
