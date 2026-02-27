@@ -23,14 +23,14 @@ export class BaseService<T> {
     `;
 
     const result = await this.pool.query(query, values);
-    return result.rows[0];
+    return result.rows[0] as T;
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<T | null> {
     const query = `SELECT * FROM ${this.tableName} WHERE ID =$1`;
     const result = await this.pool.query(query, [id]);
 
-    return result.rows.length > 0 ? result.rows[0] : null;
+    return result.rows.length > 0 ? (result.rows[0] as T) : null;
   }
 
   async findAll(): Promise<T[]> {
