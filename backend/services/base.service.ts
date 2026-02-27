@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { pool } from '../config/db.js';
+import { pool } from '../config/db';
 
 export class BaseService<T> {
   protected tableName: string;

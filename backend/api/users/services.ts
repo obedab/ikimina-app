@@ -1,5 +1,5 @@
 import { BaseService } from '../services/base.service';
-import type { User } from '../types/user.js';
+import type { User } from '../types/user';
 
 export class UserService extends BaseService<User> {
   constructor() {
