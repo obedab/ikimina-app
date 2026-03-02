@@ -1,7 +1,7 @@
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
-import { connectDB } from './config/db.js';
+import { connectDB } from './config/db';
 
 const app = express();
 const PORT = 5000;
@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('API Irakora neza')
+  res.send('API Irakora neza');
 });
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'OK' });
@@ -27,4 +27,4 @@ const startServer = async () => {
   });
 };
 
-startServer();
+startServer().catch((err) => console.error('pole, Server failed to start', err));

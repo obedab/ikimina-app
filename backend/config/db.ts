@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, QueryArrayConfig } from 'pg';
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -23,7 +23,7 @@ const connectDB = async (): Promise<void> => {
   }
 };
 
-const runQuery = (query: string, params: any) => pool.query(
-  query, params
-)
+const runQuery = async (query: QueryArrayConfig<string>, params: string[]) => {
+  return pool.query(query, params);
+};
 export { pool, connectDB, runQuery };
