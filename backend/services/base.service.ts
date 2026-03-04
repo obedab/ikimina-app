@@ -35,7 +35,7 @@ export class BaseService<T> {
 
   async findAll(options: Partial<T>): Promise<T[]> {
     let query = `SELECT * FROM ${this.tableName}`;
-    const values = [];
+    const values = [] ;
 
     if (options && Object.keys(options).length > 0) {
       const conditions = Object.keys(options)
@@ -46,7 +46,7 @@ export class BaseService<T> {
         .join(' AND ');
       query += ` WHERE ${conditions}`;
     }
-    const result = await this.pool.query(query);
+    const result = await this.pool.query(query), values;
     return result.rows as T[];
   }
 
