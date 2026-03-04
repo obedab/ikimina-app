@@ -33,10 +33,20 @@ export class BaseService<T> {
     return result.rows.length > 0 ? (result.rows[0] as T) : null;
   }
 
-  async findAll(): Promise<T[]> {
-    const query = `SELECT * FROM ${this.tableName}`;
-    const result = await this.pool.query(query);
+  async findAll(options: Partial<T>): Promise<T[]> {
+    let query = `SELECT * FROM ${this.tableName}`;
+    const values = [];
 
+    if (options && Object.keys(options).length > 0) {
+      const conditions = Object.keys(options)
+        .map((key, index) => {
+          values.push((options as any)[key]);
+          return `${key} = $${index + 1}`;
+        })
+        .join(' AND ');
+      query += ` WHERE ${conditions}`;
+    }
+    const result = await this.pool.query(query);
     return result.rows as T[];
   }
 

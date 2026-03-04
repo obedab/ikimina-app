@@ -1,13 +1,16 @@
-import { BaseService } from '../services/base.service';
+import { BaseService } from '../../services/base.service';
 import type { User } from '../types/user';
 
 export class UserService extends BaseService<User> {
   constructor() {
     super('users');
   }
-  async findByEmail(email: string): Promise<User | null> {
-    const query = ` SELECT * FROM ${this.tableName} Where email = $1`;
-    const result = await this.pool.query(query, [email]);
-    return result.rows.length > 0 ? result.rows.rows[0] : null;
+  async createUser(data: User): Promise<User> {
+    const newUser = this.create(data);
+    return newUser;
+  }
+  async findUser(options: Partial<User>): Promise<User | null> {
+    const users = await this.findAll(options);
+    return UserService.length > 0 ? users[0] : null;
   }
 }
