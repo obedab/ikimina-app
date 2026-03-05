@@ -35,19 +35,24 @@ export class BaseService<T> {
 
   async findAll(options: Partial<T>): Promise<T[]> {
     let query = `SELECT * FROM ${this.tableName}`;
-    const values = [] ;
+    const values: unknown[] = [];
 
     if (options && Object.keys(options).length > 0) {
       const conditions = Object.keys(options)
         .map((key, index) => {
-          values.push((options as any)[key]);
+          const value = options[key as keyof T];
+          values.push(value);
           return `${key} = $${index + 1}`;
         })
         .join(' AND ');
       query += ` WHERE ${conditions}`;
     }
-    const result = await this.pool.query(query), values;
+    const result = await this.pool.query(query, values);
     return result.rows as T[];
+  }
+  async findOne(options: Partial<T>): Promise<T | null> {
+    const allItems = await this.findAll(options);
+    return allItems.length > 0 ? allItems[0] : null;
   }
 
   async update(id: number, data: Partial<T>): Promise<boolean> {

@@ -6,11 +6,14 @@ export class UserService extends BaseService<User> {
     super('users');
   }
   async createUser(data: User): Promise<User> {
+    const emailExists = await this.findOne({ email: data.email });
+    if (emailExists) {
+      throw new Error('This email has been used ');
+    }
     const newUser = this.create(data);
     return newUser;
   }
-  async findUser(options: Partial<User>): Promise<User | null> {
-    const users = await this.findAll(options);
-    return UserService.length > 0 ? users[0] : null;
+  async findUser(user: Partial<User>) {
+    return this.findOne(user);
   }
 }
