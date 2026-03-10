@@ -13,10 +13,10 @@ export class UserService extends BaseService<User> {
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    const newUser = this.create({...data, password: hashedPassword});
+    const newUser = this.create({ ...data, password: hashedPassword });
     return newUser;
   }
-  
+
   async loginUser(email: string, password: string): Promise<User> {
     const user = await this.findOne({ email });
 
@@ -34,7 +34,6 @@ export class UserService extends BaseService<User> {
     return userWithoutPassword as User;
   }
 
-  
   async findUser(user: Partial<User>) {
     return this.findOne(user);
   }
