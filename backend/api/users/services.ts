@@ -28,7 +28,7 @@ export class UserService extends BaseService<User> {
     if (!isMatch) {
       throw new Error('Invalid password');
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 
     return userWithoutPassword as User;
