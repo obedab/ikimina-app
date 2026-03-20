@@ -2,11 +2,12 @@ import { runQuery } from '../config/db';
 
 export async function up() {
   await runQuery(`
-    CREATE TABLE users (
+    CREATE TABLE contributions (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL,
+      use_id INTEGER NOT NULL REFERRENCES users(id) ON DELETE CASCADE,
+      amount DECIMAL(12,2) NOT NULL,
+      currency VARCHAR(3) NOT NULL DEFAULT 'RWF'
+      description TEXT,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
