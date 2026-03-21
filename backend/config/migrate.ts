@@ -1,11 +1,10 @@
 import { runQuery, pool } from './db';
 import fs from 'fs';
 import path from 'path';
-import { PoolClient } from 'pg';
 
 interface Migration {
-  up(client: PoolClient): Promise<void>;
-  down(client: PoolClient): Promise<void>;
+  up(): Promise<void>;
+  down(): Promise<void>;
 }
 
 interface MigrationSchema {
@@ -26,7 +25,7 @@ async function createMigrationTable() {
 
 async function getMigrated(): Promise<string[]> {
   const result = await runQuery(`
-      SELECT * from migrations,
+      SELECT * from migrations
       `);
   return result.rows.map((r: MigrationSchema) => r.name);
 }
@@ -41,7 +40,6 @@ function getMigrationFiles() {
 }
 
 async function runUp() {
-  const client = await pool.connect();
   const migratedFiles = await getMigrated();
   const { files } = getMigrationFiles();
 
@@ -53,13 +51,13 @@ async function runUp() {
     const migration = (await import(`../migrations/${file}`)) as Migration;
 
     console.log('Running:', file);
-    await migration.up(client);
+    await migration.up();
 
     await runQuery('INSERT INTO migrations(name) VALUES($1)', [file]);
   }
 }
 
-async function runDown(client: PoolClient) {
+async function runDown() {
   const migratedFiles = await getMigrated();
   const { files } = getMigrationFiles();
 
@@ -68,27 +66,32 @@ async function runDown(client: PoolClient) {
   for (const file of reversed) {
     if (!migratedFiles.includes(file)) continue;
 
+    try{
+
     const migration = (await import(`../migrations/${file}`)) as Migration;
 
     console.log('Rollback:', file);
 
-    await migration.down(client);
+    await migration.down();
 
-    await client.query('DELETE FROM migrations WHERE name = $1', [file]);
+    await runQuery('DELETE FROM migrations WHERE name = $1', [file]);
+    } catch(error){
+      console.error(`error to ${file}:`, error);
+      throw error;
+    }
   }
 }
 
 async function runMigrations(direction: 'up' | 'down') {
-  const client = await pool.connect();
-
+ const client = await pool.connect();
   try {
     await createMigrationTable();
-    await client.query('BEGIN');
+    await runQuery('BEGIN');
 
     if (direction === 'up') {
       await runUp();
     } else {
-      await runDown(client);
+      await runDown();
     }
     await runQuery('COMMIT');
   } catch (error) {
