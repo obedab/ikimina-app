@@ -66,16 +66,15 @@ async function runDown() {
   for (const file of reversed) {
     if (!migratedFiles.includes(file)) continue;
 
-    try{
+    try {
+      const migration = (await import(`../migrations/${file}`)) as Migration;
 
-    const migration = (await import(`../migrations/${file}`)) as Migration;
+      console.log('Rollback:', file);
 
-    console.log('Rollback:', file);
+      await migration.down();
 
-    await migration.down();
-
-    await runQuery('DELETE FROM migrations WHERE name = $1', [file]);
-    } catch(error){
+      await runQuery('DELETE FROM migrations WHERE name = $1', [file]);
+    } catch (error) {
       console.error(`error to ${file}:`, error);
       throw error;
     }
@@ -83,7 +82,7 @@ async function runDown() {
 }
 
 async function runMigrations(direction: 'up' | 'down') {
- const client = await pool.connect();
+  const client = await pool.connect();
   try {
     await createMigrationTable();
     await runQuery('BEGIN');
