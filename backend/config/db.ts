@@ -1,9 +1,12 @@
-import { Pool, QueryArrayConfig } from 'pg';
+import { Pool, QueryConfig } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT),
 });
@@ -23,7 +26,7 @@ const connectDB = async (): Promise<void> => {
   }
 };
 
-const runQuery = async (query: QueryArrayConfig<string>, params: string[]) => {
+const runQuery = async (query: string | QueryConfig<string[]>, params?: string[]) => {
   return pool.query(query, params);
 };
 export { pool, connectDB, runQuery };
