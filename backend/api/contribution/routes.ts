@@ -1,27 +1,36 @@
-import { body, query, param } from 'express-validator';
+import { Router } from 'express';
+import { ContributionController } from './controllers';
+import { createContributionValidator } from './validators'; 
+import { validate } from './middlewares';
 
-// ✅ Create
-export const createContributionValidator = [
-  body('userId')
-    .isInt()
-    .withMessage('userId must be a number'),
+const contributionRouter = Router();
 
-  body('amount')
-    .isFloat({ gt: 0 })
-    .withMessage('amount must be greater than 0'),
-];
+contributionRouter.post(
+  '/register',
+  createContributionValidator,
+  validate,
+  ContributionController.create.bind(ContributionController)
+);
 
-// ✅ Filter
-export const getByConditionValidator = [
-  query('userId')
-    .optional()
-    .isInt()
-    .withMessage('userId must be a number'),
-];
+contributionRouter.get(
+  '/',
+  ContributionController.getAll.bind(ContributionController)
+);
 
-// ✅ Get one
-export const getOneValidator = [
-  param('id')
-    .isInt()
-    .withMessage('id must be a number'),
-];
+contributionRouter.get(
+  '/filter',
+  ContributionController.getByCondition.bind(ContributionController)
+);
+
+contributionRouter.get(
+  '/:id',
+  ContributionController.getOne.bind(ContributionController)
+);
+
+
+contributionRouter.get(
+  '/total',
+  ContributionController.getTotal.bind(ContributionController)
+);
+
+export default contributionRouter;

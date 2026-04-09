@@ -87,4 +87,20 @@ export class ContributionController {
       return sendError(res, (error as Error).message, 404);
     }
   }
+
+  static async getTotal(_req: Request, res: Response) {
+    try {
+      const total = await contributionService.getTotalContributions();
+
+      return sendSuccess<number>(
+        res,
+        'Total contributions fetched successfully',
+        total,
+        200
+      );
+
+    } catch (error: unknown) {
+      return sendError(res, (error as Error).message, 500);
+    }
+  }
 }
