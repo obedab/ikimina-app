@@ -1,6 +1,5 @@
 import { body, query, param } from 'express-validator';
 
-// ✅ Create
 export const createContributionValidator = [
   body('userId')
     .isInt()
@@ -11,7 +10,6 @@ export const createContributionValidator = [
     .withMessage('amount must be greater than 0'),
 ];
 
-// ✅ Filter
 export const getByConditionValidator = [
   query('userId')
     .optional()
@@ -19,7 +17,6 @@ export const getByConditionValidator = [
     .withMessage('userId must be a number'),
 ];
 
-// ✅ Get one
 export const getOneValidator = [
   param('id')
     .isInt()
