@@ -6,10 +6,39 @@ export class ContributionService extends BaseService<Contribution> {
     super('contributions');
   }
 
-  async getTotalContributions(): Promise<number> {
-    const query = `SELECT SUM(amount) as total From ${this.tableName}`;
-    const result = await this.pool.query(query);
-    const totalCount = (result.rows as { total: number }[])[0].total || 0;
-    return totalCount;
+  async createContribution(data: Contribution): Promise<Contribution> {
+    if(!data.userId){
+      throw new Error('User is required');
+    }
+
+    if (!data.amount || data.amount <= 0){
+      throw new Error('Amount must be greater than 0');
+    }
+
+    const newContribution = await this.create({
+      ...data,
+      createdAt: new Date(),
+    })
+
+    return newContribution;
   }
+
+  async getAllContributions(): Promise<Contribution[]> {
+    return await this.findAll({});
+  }
+
+  async getContributionsByConditions(condition: Partial<Contribution>): Promise<Contribution[]>{
+    return await this.findMany(condition);
+  }
+
+  async getContributionDetails(id: number): Promise<Contribution> {
+    const contribution = await this.findById(id);
+
+    if (!contribution) {
+      throw new Error('Contribution not found');
+    }
+
+    return contribution;
+  } 
+  
 }
