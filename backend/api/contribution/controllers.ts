@@ -25,10 +25,20 @@ export class ContributionController {
     }
   }
 
-  static async getAll(_req: Request, res: Response) {
+  static async fetchContribution(req: Request, res: Response) {
     try {
+      const filters: Partial<Contribution> = {};
+
+      if (req.query.userId) {
+        filters.userId = Number(req.query.userId as string);
+      }
+
+      if (req.query.type) {
+        filters.type = req.query.type as string;
+      }
+
       const contributions =
-        await contributionService.getAllContributions();
+        await contributionService.fetchContributions(filters);
 
       return sendSuccess<Contribution[]>(
         res,
@@ -42,34 +52,7 @@ export class ContributionController {
     }
   }
 
-  static async getByCondition(req: Request, res: Response) {
-    try {
-      const condition: Partial<Contribution> = {};
-
-      if (req.query.userId) {
-        condition.userId = Number(req.query.userId as string);
-      }
-
-      if (req.query.type) {
-        condition.type = req.query.type as string;
-      }
-
-      const contributions =
-        await contributionService.getContributionsByConditions(condition);
-
-      return sendSuccess<Contribution[]>(
-        res,
-        'Filtered contributions fetched successfully',
-        contributions,
-        200
-      );
-
-    } catch (error: unknown) {
-      return sendError(res, (error as Error).message, 500);
-    }
-  }
-
-  static async getOne(req: Request, res: Response) {
+  static async getContributionDetails(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
 
@@ -88,9 +71,9 @@ export class ContributionController {
     }
   }
 
-  static async getTotal(_req: Request, res: Response) {
+  static async getContributionSummary(_req: Request, res: Response) {
     try {
-      const total = await contributionService.getTotalContributions();
+      const total = await contributionService.getContributionSummary();
 
       return sendSuccess<number>(
         res,

@@ -6,31 +6,25 @@ import { validate } from './middlewares';
 const contributionRouter = Router();
 
 contributionRouter.post(
-  '/register',
+  '/',
   createContributionValidator,
   validate,
-  ContributionController.create.bind(ContributionController)
+  ContributionController.createContribution
 );
 
 contributionRouter.get(
   '/',
-  ContributionController.getAll.bind(ContributionController)
-);
-
-contributionRouter.get(
-  '/filter',
-  ContributionController.getByCondition.bind(ContributionController)
+  ContributionController.fetchContribution
 );
 
 contributionRouter.get(
   '/:id',
-  ContributionController.getOne.bind(ContributionController)
+  ContributionController.getContributionDetails
 );
 
-
 contributionRouter.get(
-  '/total',
-  ContributionController.getTotal.bind(ContributionController)
+  '/summary',
+  ContributionController.getContributionSummary
 );
 
 export default contributionRouter;

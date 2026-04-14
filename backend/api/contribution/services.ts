@@ -23,12 +23,8 @@ export class ContributionService extends BaseService<Contribution> {
     return newContribution;
   }
 
-  async getAllContributions(): Promise<Contribution[]> {
-    return await this.findAll({});
-  }
-
-  async getContributionsByConditions(condition: Partial<Contribution>): Promise<Contribution[]>{
-    return await this.findMany(condition);
+  async fetchContributions(filters?: Partial<Contribution>): Promise<Contribution[]> {
+    return await this.findAll(filters || {});
   }
 
   async getContributionDetails(id: number): Promise<Contribution> {
@@ -41,7 +37,7 @@ export class ContributionService extends BaseService<Contribution> {
     return contribution;
   }
 
-  async getTotalContributions(): Promise<number> {
+  async getContributionSummary(): Promise<number> {
     const query = `SELECT SUM(amount) as total From ${this.tableName}`;
     const result = await this.pool.query(query);
     const totalCount = (result.rows as { total: number }[])[0].total || 0;
