@@ -9,7 +9,7 @@ contributionRouter.post(
   '/',
   createContributionValidator,
   validate,
-  ContributionController.createContribution
+  ContributionController.create
 );
 
 contributionRouter.get(
