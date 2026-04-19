@@ -1,5 +1,4 @@
-
-  export interface Contribution {
+export interface Contribution {
   id: number;
   userId: number;
   amount: number;
@@ -8,4 +7,10 @@
   description?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ContributionSummary {
+  totalAmount: number;
+  totalContributors: number;
+  averagePerContributor: number;
 }

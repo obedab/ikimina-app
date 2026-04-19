@@ -83,9 +83,7 @@ export class BaseService<T> {
 
     const values = Object.values(condition);
 
-    const whereClause = keys
-      .map((key, index) => `${key} = $${index + 1}`)
-      .join(' AND ');
+    const whereClause = keys.map((key, index) => `${key} = $${index + 1}`).join(' AND ');
 
     const query = `SELECT * FROM ${this.tableName} WHERE ${whereClause}`;
 
@@ -93,5 +91,4 @@ export class BaseService<T> {
 
     return result.rows as T[];
   }
-
 }

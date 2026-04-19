@@ -1,6 +1,6 @@
 export type ApiError = {
-  field?: string;   
-  message: string;  
+  field?: string;
+  message: string;
 };
 
 export type ApiResponse<T> = {

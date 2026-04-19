@@ -23,6 +23,7 @@ export default [
       },
     },
     rules: {
-'@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }]    },
+      '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
+    },
   },
 ];

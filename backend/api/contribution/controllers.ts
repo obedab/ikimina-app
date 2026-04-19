@@ -6,20 +6,11 @@ import { sendSuccess, sendError } from '../../utils/response';
 const contributionService = new ContributionService();
 
 export class ContributionController {
-
   static async create(req: Request, res: Response) {
     try {
-      const contribution = await contributionService.createContribution(
-        req.body as Contribution
-      );
+      const contribution = await contributionService.createContribution(req.body as Contribution);
 
-      return sendSuccess<Contribution>(
-        res,
-        'Contribution created successfully',
-        contribution,
-        201
-      );
-
+      return sendSuccess<Contribution>(res, 'Contribution created successfully', contribution, 201);
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 400);
     }
@@ -37,16 +28,14 @@ export class ContributionController {
         filters.type = req.query.type as string;
       }
 
-      const contributions =
-        await contributionService.fetchContributions(filters);
+      const contributions = await contributionService.fetchContributions(filters);
 
       return sendSuccess<Contribution[]>(
         res,
         'Contributions fetched successfully',
         contributions,
-        200
+        200,
       );
-
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 500);
     }
@@ -56,16 +45,14 @@ export class ContributionController {
     try {
       const id = Number(req.params.id);
 
-      const contribution =
-        await contributionService.getContributionDetails(id);
+      const contribution = await contributionService.getContributionDetails(id);
 
       return sendSuccess<Contribution>(
         res,
         'Contribution details fetched successfully',
         contribution,
-        200
+        200,
       );
-
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 404);
     }
@@ -75,13 +62,7 @@ export class ContributionController {
     try {
       const total = await contributionService.getContributionSummary();
 
-      return sendSuccess<number>(
-        res,
-        'Total contributions fetched successfully',
-        total,
-        200
-      );
-
+      return sendSuccess<number>(res, 'Total contributions fetched successfully', total, 200);
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 500);
     }
