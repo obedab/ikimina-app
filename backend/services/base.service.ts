@@ -77,4 +77,18 @@ export class BaseService<T> {
 
     return (result.rowCount ?? 0) > 0;
   }
+
+  async findMany(condition: Partial<T>): Promise<T[]> {
+    const keys = Object.keys(condition);
+
+    const values = Object.values(condition);
+
+    const whereClause = keys.map((key, index) => `${key} = $${index + 1}`).join(' AND ');
+
+    const query = `SELECT * FROM ${this.tableName} WHERE ${whereClause}`;
+
+    const result = await this.pool.query(query, values);
+
+    return result.rows as T[];
+  }
 }

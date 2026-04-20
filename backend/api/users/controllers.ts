@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserService } from './services';
 import { User } from '../types/user';
+import { sendError, sendSuccess } from '../../utils/response';
 
 const userService = new UserService();
 export class UserController {
@@ -8,29 +9,22 @@ export class UserController {
     try {
       const user = await userService.createUser(req.body as User);
 
-      res.status(201).json({
-        message: 'User registered successfully',
-        data: user,
-      });
+      return sendSuccess<User>(res, 'User registered successfully', user, 201);
     } catch (error: unknown) {
-      res.status(400).json({
-        message: (error as Error).message,
-      });
+      const errorMessage = (error as Error).message;
+      return sendError(res, errorMessage, 400);
     }
   }
+
   static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as User;
       const user = await userService.loginUser(email, password);
 
-      res.status(200).json({
-        message: 'Login successful',
-        data: user,
-      });
+      return sendSuccess(res, 'Login successful', user, 200);
     } catch (error: unknown) {
-      res.status(401).json({
-        message: (error as Error).message,
-      });
+      const errorMessage = (error as Error).message;
+      return sendError(res, errorMessage, 401);
     }
   }
 }

@@ -23,7 +23,7 @@ export default [
       },
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
     },
   },
 ];
