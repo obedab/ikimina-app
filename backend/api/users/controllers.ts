@@ -19,9 +19,12 @@ export class UserController {
   static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as User;
-      const user = await userService.loginUser(email, password);
+      const result = await userService.loginUser(email, password);
 
-      return sendSuccess(res, 'Login successful', user, 200);
+      return sendSuccess(res, 'Login successful', {
+        user: result.user,
+        token:result.token,
+        }, 200);
     } catch (error: unknown) {
       const errorMessage = (error as Error).message;
       return sendError(res, errorMessage, 401);
