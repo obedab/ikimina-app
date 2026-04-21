@@ -2,7 +2,7 @@ import { BaseService } from '../../services/base.service';
 import { LoginResponse } from '../types/auth';
 import type { User } from '../types/user';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 export class UserService extends BaseService<User> {
   constructor() {
@@ -39,10 +39,10 @@ export class UserService extends BaseService<User> {
         email: user.email,
       },
       process.env.JWT_SECRET as string,
-      { expiresIn: '1d'}
-    )
+      { expiresIn: '1d' },
+    );
 
-    return {user: userWithoutPassword as User, token};
+    return { user: userWithoutPassword as User, token };
   }
 
   async findUser(user: Partial<User>) {

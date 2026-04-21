@@ -21,10 +21,15 @@ export class UserController {
       const { email, password } = req.body as User;
       const result = await userService.loginUser(email, password);
 
-      return sendSuccess(res, 'Login successful', {
-        user: result.user,
-        token:result.token,
-        }, 200);
+      return sendSuccess(
+        res,
+        'Login successful',
+        {
+          user: result.user,
+          token: result.token,
+        },
+        200,
+      );
     } catch (error: unknown) {
       const errorMessage = (error as Error).message;
       return sendError(res, errorMessage, 401);

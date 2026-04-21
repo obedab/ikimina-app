@@ -1,5 +1,5 @@
-import { User } from "./user";
- 
+import { User } from './user';
+
 export interface AuthUser {
   id: number;
   email?: string;
@@ -13,6 +13,6 @@ export interface JwtPayload {
 }
 
 export interface LoginResponse {
-  user: Omit<User, "password">;
+  user: Omit<User, 'password'>;
   token: string;
 }
