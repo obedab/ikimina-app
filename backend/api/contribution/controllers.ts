@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ContributionService } from './services';
-import { Contribution } from '../types/contribution';
+import { Contribution, ContributionSummary } from '../types/contribution';
 import { sendSuccess, sendError } from '../../utils/response';
 
 const contributionService = new ContributionService();
@@ -62,7 +62,12 @@ export class ContributionController {
     try {
       const total = await contributionService.getContributionSummary();
 
-      return sendSuccess<number>(res, 'Total contributions fetched successfully', total, 200);
+      return sendSuccess<ContributionSummary>(
+        res,
+        'Total contributions fetched successfully',
+        total,
+        200,
+      );
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 500);
     }
