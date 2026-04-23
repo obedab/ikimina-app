@@ -1,6 +1,8 @@
 import { BaseService } from '../../services/base.service';
+import { LoginResponse } from '../types/auth';
 import type { User } from '../types/user';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export class UserService extends BaseService<User> {
   constructor() {
@@ -17,7 +19,7 @@ export class UserService extends BaseService<User> {
     return newUser;
   }
 
-  async loginUser(email: string, password: string): Promise<User> {
+  async loginUser(email: string, password: string): Promise<LoginResponse> {
     const user = await this.findOne({ email });
 
     if (!user) {
@@ -31,7 +33,16 @@ export class UserService extends BaseService<User> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 
-    return userWithoutPassword as User;
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '1d' },
+    );
+
+    return { user: userWithoutPassword as User, token };
   }
 
   async findUser(user: Partial<User>) {
