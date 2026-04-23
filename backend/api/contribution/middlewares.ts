@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { sendError } from '../../utils/response';
 import { ApiError } from '../types/apiResponse';
-import { JwtPayload } from '../types/auth';
+import { AuthUser } from '../types/auth';
 
 export const validate = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
@@ -40,7 +40,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   const token = parts[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as AuthUser;
 
     req.user = decoded;
 
