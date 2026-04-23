@@ -2,13 +2,13 @@ import { User } from './user';
 
 export interface AuthUser {
   id: number;
-  email?: string;
+  email: string;
   role?: string;
 }
 
 export interface JwtPayload {
   id: number;
-  email?: string;
+  email: string;
   role?: string;
 }
 
