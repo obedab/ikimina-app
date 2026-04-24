@@ -16,7 +16,7 @@ export async function up() {
     CREATE UNIQUE INDEX one_base_currency
     ON currencies (is_base)
     WHERE is_base = true;
-  `); 
+  `);
 }
 
 export async function down() {
