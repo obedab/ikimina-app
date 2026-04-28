@@ -6,7 +6,7 @@ export class CurrencyService extends BaseService<Currency> {
     super('currencies');
   }
 
-  async CreateCurrency(data: Omit<Currency, 'id'>): Promise<Currency> {
+  async createCurrency(data: Omit<Currency, 'id'>): Promise<Currency> {
     const existing = await this.findOne({ code: data.code });
 
     if (existing) {
