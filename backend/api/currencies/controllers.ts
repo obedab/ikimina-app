@@ -4,6 +4,7 @@ import { Currency } from '../types/currency';
 import { sendError, sendSuccess } from '../../utils/response';
 
 const currencyService = new CurrencyService();
+
 export class CurrencyController {
   static async createCurrency(req: Request, res: Response) {
     try {

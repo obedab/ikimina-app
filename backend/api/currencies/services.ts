@@ -13,15 +13,15 @@ export class CurrencyService extends BaseService<Currency> {
       throw new Error('Currency already exists');
     }
 
-    if (data.isBase) {
+    if (data.is_base) {
       await this.clearBaseCurrency();
-      data.exchangeRate = 1;
+      data.exchange_rate = 1;
     }
 
     return this.create({
       ...data,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     });
   }
   async enableBaseCurrency(id: number): Promise<boolean> {
@@ -34,9 +34,9 @@ export class CurrencyService extends BaseService<Currency> {
     await this.clearBaseCurrency();
 
     return this.update(id, {
-      isBase: true,
-      exchangeRate: 1,
-      updatedAt: new Date(),
+      is_base: true,
+      exchange_rate: 1,
+      updated_at: new Date(),
     });
   }
 
@@ -47,13 +47,13 @@ export class CurrencyService extends BaseService<Currency> {
       throw new Error('Currency is not found');
     }
 
-    if (!currency.isBase) {
+    if (!currency.is_base) {
       throw new Error('This currecy is not base');
     }
 
     return this.update(id, {
-      isBase: false,
-      updatedAt: new Date(),
+      is_base: false,
+      updated_at: new Date(),
     });
   }
 

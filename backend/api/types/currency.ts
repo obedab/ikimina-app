@@ -3,8 +3,8 @@ export interface Currency {
   code: string;
   name: string;
   symbol: string;
-  isBase: boolean;
-  exchangeRate: number;
-  createdAt: Date;
-  updatedAt: Date;
+  is_base: boolean;
+  exchange_rate: number;
+  created_at: Date;
+  updated_at: Date;
 }
