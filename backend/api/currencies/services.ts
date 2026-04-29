@@ -58,10 +58,14 @@ export class CurrencyService extends BaseService<Currency> {
   }
 
   private async clearBaseCurrency(): Promise<void> {
-    await this.pool.query(`
-      UPDATE currencies
-      SET is_base = false
-      WHERE is_base = true;
-    `);
+    const baseCurrency = await this.findMany({ isBase: true});
+    
+    for (const currency of baseCurrency) {
+      await this.update(currency.id, {
+        isBase: false,
+        updatedAt:new Date(),
+      });
+    }
+    
   }
 }
