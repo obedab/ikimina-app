@@ -58,14 +58,13 @@ export class CurrencyService extends BaseService<Currency> {
   }
 
   private async clearBaseCurrency(): Promise<void> {
-    const baseCurrency = await this.findMany({ isBase: true});
-    
+    const baseCurrency = await this.findMany({ is_base: true });
+
     for (const currency of baseCurrency) {
       await this.update(currency.id, {
-        isBase: false,
-        updatedAt:new Date(),
+        is_base: false,
+        updated_at: new Date(),
       });
     }
-    
   }
 }
