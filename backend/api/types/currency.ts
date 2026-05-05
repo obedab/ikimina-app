@@ -8,3 +8,7 @@ export interface Currency {
   created_at: Date;
   updated_at: Date;
 }
+
+export type CurrencyApiResponse = {
+  eur: Record<string, number>;
+};

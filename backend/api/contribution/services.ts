@@ -1,12 +1,12 @@
 import { BaseService } from '../../services/base.service';
-import type { Contribution, ContributionSummary } from '../types/contribution';
+import type { Contribution, CreateContributionDTO, ContributionSummary } from '../types/contribution';
 
 export class ContributionService extends BaseService<Contribution> {
   constructor() {
     super('contributions');
   }
 
-  async createContribution(data: Contribution): Promise<Contribution> {
+  async createContribution(data: CreateContributionDTO): Promise<Contribution> {
     if (!data.userId) {
       throw new Error('User is required');
     }

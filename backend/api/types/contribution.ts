@@ -4,6 +4,8 @@ export interface Contribution {
   amount: number;
   currency: string;
   type?: string;
+  originalAmount: number;
+  originalCurrency: string;
   description?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -14,3 +16,13 @@ export interface ContributionSummary {
   totalContributors: number;
   averagePerContributor: number;
 }
+
+export type CreateContributionDTO = {
+  userId: number;
+  amount: number;
+  originalAmount: number;
+  originalCurrency: string;
+  type?: string;
+  description?: string;
+};
+
