@@ -1,5 +1,9 @@
 import { BaseService } from '../../services/base.service';
-import type { Contribution, CreateContributionDTO, ContributionSummary } from '../types/contribution';
+import type {
+  Contribution,
+  CreateContributionDTO,
+  ContributionSummary,
+} from '../types/contribution';
 
 export class ContributionService extends BaseService<Contribution> {
   constructor() {

@@ -26,3 +26,15 @@ export type CreateContributionDTO = {
   description?: string;
 };
 
+export type ContributionRow = {
+  id: number;
+  user_id: number;
+  amount: number;
+  currency: string;
+  type: string;
+  original_amount: number;
+  original_currency: string;
+  description: string | null;
+  created_at: Date;
+  updated_at: Date;
+};
