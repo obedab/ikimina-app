@@ -1,15 +1,46 @@
 import { Request, Response } from 'express';
 import { ContributionService } from './services';
-import { Contribution, ContributionSummary } from '../types/contribution';
+import { CurrencyService } from '../currencies/services';
+import { Contribution, CreateContributionDTO, ContributionSummary } from '../types/contribution';
 import { sendSuccess, sendError } from '../../utils/response';
 
 const contributionService = new ContributionService();
 
+const currencyService: CurrencyService = new CurrencyService();
+
 export class ContributionController {
   static async create(req: Request, res: Response) {
     try {
-      const contribution = await contributionService.createContribution(req.body as Contribution);
+      const { amount, currency, type, description, userId } = req.body as Contribution;
 
+      if (!userId) {
+        return sendError(res, 'userId is required', 400);
+      }
+
+      if (!amount || amount <= 0) {
+        return sendError(res, 'amount must be greater than 0', 400);
+      }
+
+      const baseCurrency = await currencyService.findOne({ is_base: true });
+      if (!baseCurrency) {
+        return sendError(res, 'Base currency not set', 500);
+      }
+
+      const convertedAmount = await currencyService.convertToBaseCurrency({
+        amount,
+        fromCurrency: currency,
+        baseCurrency: baseCurrency.code,
+      });
+
+      const payload: CreateContributionDTO = {
+        userId,
+        amount: convertedAmount,
+        originalAmount: amount,
+        originalCurrency: currency,
+        type,
+        description,
+      };
+      const contribution = await contributionService.createContribution(payload);
       return sendSuccess<Contribution>(res, 'Contribution created successfully', contribution, 201);
     } catch (error: unknown) {
       return sendError(res, (error as Error).message, 400);

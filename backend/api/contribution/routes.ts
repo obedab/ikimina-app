@@ -5,7 +5,13 @@ import { authenticate, validate } from './middlewares';
 
 const contributionRouter = Router();
 
-contributionRouter.post('/', createContributionValidator, validate, ContributionController.create);
+contributionRouter.post(
+  '/',
+  authenticate,
+  createContributionValidator,
+  validate,
+  ContributionController.create,
+);
 
 contributionRouter.get('/', ContributionController.fetchContribution);
 
